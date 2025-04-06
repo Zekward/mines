@@ -1,10 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import webbrowser
+from pymongo import MongoClient
 from threading import Timer
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'b9f8a5c42b2f4a829bb6e7f4ef9d1b90'
-users = {}
+app.secret_key = os.environ.get('SECRET_KEY')
+client = MongoClient(os.environ.get('MONGO_URI'))
+db = client["mines"]
+user_collection = db["users"]
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -13,17 +20,20 @@ def home():
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        print("form submitted!")
         username = request.form['username']
         password = request.form['password']
 
-        if username not in users:
-            return 'User not found'
-        elif users[username] == password:
+
+        user = user_collection.find_one({"username": username})
+        if not user:
+            return 'User not found. <a href="/login">Try again</a>'
+        elif user['password'] == password:
             session['user'] = username
             print(f"User {username} logged in!")
             return redirect('/game')
         else: 
-            return 'Invalid username or password. <a href='/'>Try again</a>'
+            return 'Invalid username or password. <a href="/login">Try again</a>'
 
     return render_template('login.html')
 
@@ -33,10 +43,15 @@ def signup():
         username = request.form['username']
         password = request.form['password']
 
-        if username in users:
+        existing_user = user_collection.find_one({"username": username})
+        if existing_user:
             return "Username already exists. <a href='/'>Try again</a>"
 
-        users[username] = password
+        user_collection.insert_one({
+            "username" : username,
+            "password" : password
+        })
+
         session['user'] = username
         print(f"User {username} signed up!")
         
