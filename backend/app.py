@@ -62,11 +62,8 @@ def signup():
 def game():
     if 'user' in session:
         username = session['user']
-        return f"""
-        <h1>Welcome to the Game, {username}!</h1>
-        <p>This is your game page. (Coming soon...)</p>
-        <a href="/logout">Logout</a>
-        """
+        return render_template('game.html', username=username)
+    
     else:
         return redirect('/login')
     
