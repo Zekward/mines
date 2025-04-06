@@ -13,6 +13,11 @@
             align-items: center;
             height: 100vh;
         }
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .form-container {
             background-color: #1e1e1e;
             padding: 30px;
@@ -20,6 +25,13 @@
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
             width: 300px;
             text-align: center;
+        }
+        .logo {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px #BB86FC
         }
         input[type="text"], input[type="password"] {
             width: 90%;
@@ -52,14 +64,23 @@
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Login</h2>
-        <form method="POST" action="/">
-            <input type="text" name="username" placeholder="Username" required><br>
-            <input type="password" name="password" placeholder="Password" required><br>
-            <input type="submit" value="Login">
-        </form>
-        <a class="link" href="/signup">Don't have an account? Sign up here</a>
+    <div class="page-container">
+        <div class="logo">
+        Mine
+        </div>
+        <div class="form-container">
+            <h2>Login</h2>
+            <form method="POST" action="/">
+                <input type="text" name="username" placeholder="Username" required><br>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <input type="submit" value="Login">
+            </form>
+            <a class="link" href="/signup">Don't have an account? Sign up here</a>
+        </div>
     </div>
+
+
+
+    
 </body>
 </html>
